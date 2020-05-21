@@ -1,4 +1,5 @@
 const flawedItemMessage = 'Your item has a flawed structure. Make sure it has name, durability, and enhancement properties'
+
 module.exports = {
   succeed,
   fail,
@@ -9,14 +10,22 @@ module.exports = {
 
 function succeed(item) {
   if (EnsureValidItem(item)) {
-    const newEnhancement = item.enhancement >= 20 ? 20 : item.enhancement + 1
+    const newEnhancement = item.enhancement === 20 ? 20 : item.enhancement + 1
     return { ...item, enhancement: newEnhancement }
   }
   return flawedItemMessage
 }
 
 function fail(item) {
-  return { ...item }
+  if (EnsureValidItem(item)) {
+    item.enhancement = item.enhancement > 16 ? item.enhancement - 1 : item.enhancement
+    item.durability = item.enhancement >= 15 ? item.durability - 10 : item.durability - 5
+    // make sure we don't have negative values
+    item.enhancement = item.enhancement < 0 ? 0 : item.enhancement
+    item.durability = item.durability < 0 ? 0 : item.durability
+    return item
+  }
+  return flawedItemMessage
 }
 
 // restores item durability to 100
