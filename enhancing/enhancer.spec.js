@@ -82,4 +82,35 @@ describe('tests for enhancer functions', () => {
             expect(returnedItem.enhancement).toBe(10)
         })
     })
+    describe('tests for get function', () => {
+        // makes sure we get error message if the item has an incorrect structure
+        it('returns error message if the item has wrong structure', () => {
+            const flawedItem = { bad: true }
+            expect(enhancer.get(flawedItem)).toBe(enhancer.flawedItemMessage)
+        })
+        // makes sure name is unchanged when enhancement is 0
+        it('returns unchanged name and other properties in item', () => {
+            const item = {
+                name: 'Amazing Name',
+                durability: 40,
+                enhancement: 0
+            }
+            const returnedItem = enhancer.get(item)
+            expect(returnedItem.durability).toBe(40)
+            expect(returnedItem.name).toBe('Amazing Name')
+            expect(returnedItem.enhancement).toBe(0)
+        })
+        // makes sure name is changed to be preceded by [+{enhancement}] when enhancement is greater than 0
+        it('returns name preceded by [+{enhancement}] and other item properties unchanged', () => {
+            const item = {
+                name: 'Amazing Name',
+                durability: 40,
+                enhancement: 10
+            }
+            const returnedItem = enhancer.get(item)
+            expect(returnedItem.durability).toBe(40)
+            expect(returnedItem.name).toBe('[+10] Amazing Name')
+            expect(returnedItem.enhancement).toBe(10)
+        })
+    })
 })

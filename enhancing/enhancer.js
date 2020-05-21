@@ -20,7 +20,7 @@ function fail(item) {
   if (EnsureValidItem(item)) {
     item.enhancement = item.enhancement > 16 ? item.enhancement - 1 : item.enhancement
     item.durability = item.enhancement >= 15 ? item.durability - 10 : item.durability - 5
-    // make sure we don't have negative values
+    // make sure we don't have negative values by making 0 the lowest possible value
     item.enhancement = item.enhancement < 0 ? 0 : item.enhancement
     item.durability = item.durability < 0 ? 0 : item.durability
     return item
@@ -37,7 +37,11 @@ function repair(item) {
 }
 
 function get(item) {
-  return { ...item }
+  if (EnsureValidItem(item)) {
+    item.name = item.enhancement === 0 ? item.name : `[+${item.enhancement}] ${item.name}`
+    return item
+  }
+  return flawedItemMessage
 }
 
 // used typeof === number for durability and enhancement in case value is 0 which is a 'falsey' value
