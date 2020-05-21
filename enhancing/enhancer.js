@@ -8,8 +8,11 @@ module.exports = {
 }
 
 function succeed(item) {
-  
-  return { ...item }
+  if (EnsureValidItem(item)) {
+    const newEnhancement = item.enhancement >= 20 ? 20 : item.enhancement + 1
+    return { ...item, enhancement: newEnhancement }
+  }
+  return flawedItemMessage
 }
 
 function fail(item) {
@@ -20,10 +23,8 @@ function fail(item) {
 function repair(item) {
   if (EnsureValidItem(item)) {
     return { ...item, durability: 100 }
-  } else {
-    return flawedItemMessage
   }
-  
+  return flawedItemMessage
 }
 
 function get(item) {
@@ -32,5 +33,5 @@ function get(item) {
 
 // used typeof === number for durability and enhancement in case value is 0 which is a 'falsey' value
 function EnsureValidItem(item) {
-  return item && item.name && typeof(item.durability) === 'number' && typeof(item.enhancement) === 'number'
+  return item && item.name && typeof(item.durability) === 'number' && typeof(item.enhancement) === 'number' && item.enhancement >= 0 && item.enhancement <= 20 && item.durability >= 0 && item.durability <= 100
 }
